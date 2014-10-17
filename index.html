@@ -36,7 +36,7 @@
 
               var $tweet = $('<div></div>');
               $tweet.text('@' + tweet.user + ': ' + tweet.message);
-              $tweet.appendTo($body);
+              $tweet.insertAfter($h2);
               index -= 1;
               mycount++;
               time = tweet.created_at;
@@ -52,7 +52,7 @@
 
               var $tweet = $('<div></div>');
               $tweet.text('@' + tweet.user + ': ' + tweet.message);
-              $tweet.appendTo($body);
+              $tweet.insertAfter($h2);
               index -= 1;
               mycount++;
               //time = tweet.created_at;
