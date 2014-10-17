@@ -3,22 +3,64 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <script src="watch.js" type="text/javascript"></script>
+    <!-- watch will be global variable -->
   </head>
   <body>
     <script>
 
       $(document).ready(function(){
+        var time = new Date();
+
         var $body = $('body');
         $body.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
-        }
+        var $h2 = $('<h2></h2>');
+        $h2.text("Zach's Twittler").appendTo($body);
+        //setInterval(fetch, 3000);
+        //fetch();
+        var time = new Date();
+        var mycount = 0; 
+        
+        load();
+        watch(streams, "home", function(){
+          fetch();
+        });
+       
+
+        function fetch(){
+          var index = streams.home.length - 1;
+          while(index >= mycount){
+            var tweet = streams.home[index];
+            //if (time.getTime() <  tweet.created_at.getTime()){
+
+              var $tweet = $('<div></div>');
+              $tweet.text('@' + tweet.user + ': ' + tweet.message);
+              $tweet.appendTo($body);
+              index -= 1;
+              mycount++;
+              time = tweet.created_at;
+            //}
+          }
+        };
+
+        function load(){
+          var index = streams.home.length - 1;
+          while(index >= 0){
+            var tweet = streams.home[index];
+            //if (time.getTime() <  tweet.created_at.getTime()){
+
+              var $tweet = $('<div></div>');
+              $tweet.text('@' + tweet.user + ': ' + tweet.message);
+              $tweet.appendTo($body);
+              index -= 1;
+              mycount++;
+              //time = tweet.created_at;
+            //}
+          }
+        };
+
+
 
       });
 
