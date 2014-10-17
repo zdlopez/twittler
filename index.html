@@ -17,46 +17,46 @@
 
         var $h2 = $('<h2></h2>');
         $h2.text("Zach's Twittler").appendTo($body);
-        //setInterval(fetch, 3000);
-        //fetch();
+        
         var time = new Date();
         var mycount = 0; 
         
         load();
+        /* loads too many tweets too fast, not usable, switching to interval
         watch(streams, "home", function(){
           fetch();
         });
-       
+       */
+
+       setInterval(fetch, 3000);
 
         function fetch(){
           var index = streams.home.length - 1;
-          while(index >= mycount){
-            var tweet = streams.home[index];
-            //if (time.getTime() <  tweet.created_at.getTime()){
+          var count = mycount;
+          while(count <= index){
+            var tweet = streams.home[mycount];
+        
 
               var $tweet = $('<div></div>');
-              $tweet.text('@' + tweet.user + ': ' + tweet.message);
+              $tweet.text('@' + tweet.user + ': ' + tweet.message + " posted at " +tweet.created_at.toLocaleTimeString());
               $tweet.insertAfter($h2);
-              index -= 1;
+             // index -= 1;
               mycount++;
-              time = tweet.created_at;
-            //}
+              //time = tweet.created_at;
+        
           }
         };
 
         function load(){
           var index = streams.home.length - 1;
-          while(index >= 0){
-            var tweet = streams.home[index];
-            //if (time.getTime() <  tweet.created_at.getTime()){
+          while(mycount <= index){
+            var tweet = streams.home[mycount];
 
               var $tweet = $('<div></div>');
-              $tweet.text('@' + tweet.user + ': ' + tweet.message);
+              $tweet.text('@' + tweet.user + ': ' + tweet.message + " posted at " +tweet.created_at.toLocaleTimeString());
               $tweet.insertAfter($h2);
               index -= 1;
               mycount++;
-              //time = tweet.created_at;
-            //}
           }
         };
 
