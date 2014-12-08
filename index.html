@@ -4,100 +4,95 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-    <script src="watch.js" type="text/javascript"></script>
-    <!-- watch will be global variable -->
     <link rel="stylesheet" href="twittler.css">
-    <link rel+"stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
   </head>
   <body>
     <script>
 
       $(document).ready(function(){
-        var time = new Date();
-
-        var $body = $('body');
-        //$body.html('');
-
-        var $main = $('main'); 
         var $tweetspace = $('#tweetspace');
-        //var $h2 = $('<h2></h2>');
-        //$h2.text("Zach's Twittler").appendTo($body);
+      
+        var fetch = function(user){
+          console.log("my user is : " + user);
+
+          var index = 0;
+           var $view;
+
+          if(user){
+            index = streams.users[user].length - 1;
+            $view = $('<div class="view">Now viewing ' + user + ' stream. <a href="#" class="return">Return to fullstream</a></div>');
+            $tweetspace.addClass(user);
+          } else {
+            index = streams.home.length - 1;
+            $view = $('<div class="view">Now viewing all streams.</div>');
+            $tweetspace.removeClass();
+          }
+          $view.prependTo('#status');
         
-        //var time = new Date();
-        var mycount = 0; 
-        
-        load();
-        /* loads too many tweets too fast, not usable, switching to interval
-        watch(streams, "home", function(){
+          for(var count = 0; count <= index; count++){
+            var tweet;
+           
+            if(user){
+              tweet = streams.users[user][count];
+              
+            } else {
+              tweet = streams.home[count];
+              
+            }
+
+            var $tweet = $('<div class="tweet col-md-12"><div class ="user col-md-8"><a href="#" class="link '+ tweet.user + '">' + '@' + tweet.user + '</a> ' + tweet.message + '</div><div class="time"> posted at ' + tweet.created_at.toLocaleTimeString() + '</div></div>');
+            
+            $tweet.prependTo($tweetspace);        
+          }
+        };
+
+      fetch();
+
+      $button = $('button');
+       $button.on("click", function(e){
+        e.preventDefault();
+        $('.tweet').remove();
+        $('.view').remove();
+        var myuser = document.getElementById('tweetspace').getAttribute('class');
+        if(myuser){
+          fetch(myuser);
+        } else {
           fetch();
-        });
-       */
+        }
+       });
 
-       //setInterval(fetch, 3000);
-       $button = $('button');
-       $button.on("click", fetch);
-
-        function fetch(){
-          var index = streams.home.length - 1;
-          var count = mycount;
-          while(count <= index){
-            var tweet = streams.home[mycount];
+       $('#tweetspace').on('click', 'a', function(e){
+        e.preventDefault();
         
+        var myuser = this.getAttribute('class').split(" ")[1];
+        console.log('in the event handler: ' + this.getAttribute('class'));
+        $('.tweet').remove();
+        $('.view').remove();
+        fetch(myuser);
+       });
 
-              var $tweet = $('<div></div>');
-              $tweet.text('@' + tweet.user + ': ' + tweet.message + " posted at " +tweet.created_at.toLocaleTimeString());
-              $tweet.addClass("tweet");
-
-              $tweet.insertAfter($tweetspace);
-             // index -= 1;
-              mycount++;
-              //time = tweet.created_at;
-        
-          }
-        };
-
-        function load(){
-          var index = streams.home.length - 1;
-          var $divspacer = $('<div></div>');
-          $divspacer.addClass('col-md-4');
-          while(mycount <= index){
-            var tweet = streams.home[mycount];
-
-              var $tweet = $('<div></div>');
-              $tweet.text('@' + tweet.user + ': ' + tweet.message + " posted at " +tweet.created_at.toLocaleTimeString());
-              $tweet.addClass("tweet");
-              $tweet.addClass('col-md-8');
-              $divspacer.insertAfter($divspacer);
-              $tweet.insertAfter($tweetspace);
-              index -= 1;
-              mycount++;
-          }
-          
-        };
-
-
-
+       $('#status').on('click', 'a', function(e){
+        e.preventDefault();
+        $('.tweet').remove();
+        $('.view').remove();
+        fetch();
+       })
       });
-
     </script>      
 
    
     <header class="clearfix">
       <h1>Twittler</h1>
       <nav>
-        <ul>
-          <li><a id="home" href="index.html">Home</a></li>
-          <li><a id="user" href="index.html">Users</a></li>
-          <li><a id="about" href="index.html">About</a></li>
-        </ul>
+        
       </nav>
     </header>
       <main>
-        <div id="newtweet" class="col-md-4">
-          <p>Submit a new tweet</p>
+        <div id="status" class="col-md-8">
           <button type="button">Load tweets</button>
         </div>
-        <div id="tweetspace" class="col-md-8">
+        <div id="tweetspace">
         </div>
       </main>
     
